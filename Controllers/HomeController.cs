@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using FriendsTracker.Models;
 //???
 using Microsoft.EntityFrameworkCore;
+// TODO: remove unnecessary usings
 
 namespace FriendsTracker.Controllers
 {
@@ -20,8 +21,11 @@ namespace FriendsTracker.Controllers
         }
         public async Task<IActionResult> Index()
         {
+            // TODO Handle pissible error
             return View(await db.Friends.ToListAsync());
         }
+
+        // TODO: remove
         public IActionResult Create()
         {
             return View();
@@ -29,6 +33,7 @@ namespace FriendsTracker.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Friend friend)
         {
+            // TODO Handle pissible error
             db.Friends.Add(friend);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
@@ -37,6 +42,8 @@ namespace FriendsTracker.Controllers
         {
             if (id != null)
             {
+                // TODO Handle pissible error
+                // TODO use var
                 Friend friend = await db.Friends.FirstOrDefaultAsync(p => p.Id == id);
                 if (friend != null)
                     return View(friend);
@@ -47,6 +54,8 @@ namespace FriendsTracker.Controllers
         {
             if (id != null)
             {
+                // TODO Handle pissible error
+                // TODO use var
                 Friend friend = await db.Friends.FirstOrDefaultAsync(p => p.Id == id);
                 if (friend != null)
                     return View(friend);
@@ -56,6 +65,7 @@ namespace FriendsTracker.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(Friend friend)
         {
+            // TODO Handle pissible error
             db.Friends.Update(friend);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
@@ -64,6 +74,8 @@ namespace FriendsTracker.Controllers
         [ActionName("Delete")]
         public async Task<IActionResult> ConfirmDelete(int? id)
         {
+            // TODO Handle pissible error
+            // TODO use var
             if (id != null)
             {
                 Friend friend = await db.Friends.FirstOrDefaultAsync(p => p.Id == id);
@@ -73,9 +85,12 @@ namespace FriendsTracker.Controllers
             return NotFound();
         }
 
+        // TODO change to HTTP DELETE
         [HttpPost]
         public async Task<IActionResult> Delete(int? id)
         {
+            // TODO Handle pissible error
+            // TODO use var
             if (id != null)
             {
                 Friend friend = await db.Friends.FirstOrDefaultAsync(p => p.Id == id);
