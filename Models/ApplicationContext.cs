@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+// TODO Move file to project root
 namespace FriendsTracker.Models
 {
     public class ApplicationContext:DbContext
