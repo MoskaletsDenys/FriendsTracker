@@ -2,17 +2,21 @@
 @{
     ViewBag.Title = "Все пользователи";
 }
-<a asp-action="Create">Добавить пользователя</a>
+<a asp-action="Create">Добавить пользователя<br></a>
+<a asp-action="AddFriensFromXML">Добавить несколько пользователей</a>
 <table class="table">
-    <tr><td>Имя</td><td>Действия</td></tr>
+    <tr><td>Имя</td><td>Возраст</td><td>Действия</td></tr>
     @foreach (var item in Model)
     {
         // TODO Display age
-        <tr><td>@item.Name</td>
-            <td>
-                <a asp-action="Details" asp-controller="Home" asp-route-id="@item.Id">Подробнее</a> |
-                <a asp-action="Edit" asp-controller="Home" asp-route-id="@item.Id">Изменить</a> |
-                <a asp-action="Delete" asp-controller="Home" asp-route-id="@item.Id">Удалить</a>
-            </td></tr>
+<tr>
+    <td>@item.Name</td>
+    <td>@item.Age</td>
+    <td>
+        <a asp-action="Details" asp-controller="Home" asp-route-id="@item.Id">Подробнее</a> |
+        <a asp-action="Edit" asp-controller="Home" asp-route-id="@item.Id">Изменить</a> |
+        <a asp-action="Delete" asp-controller="Home" asp-route-id="@item.Id">Удалить</a>
+    </td>
+</tr>
     }
 </table>

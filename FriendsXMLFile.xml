@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<users>
+  <user >
+    <name>Tom</name>
+    <age>18</age>
+  </user>
+  <user >
+    <name>David</name>
+    <age>24</age>
+  </user>
+  <user >
+    <name>Vova</name>
+    <age>31</age>
+  </user>
+  <user >
+    <name>Igor</name>
+    <age>19</age>
+  </user>
+  <user >
+    <name>Emily</name>
+    <age>27</age>
+  </user>
+  <user >
+    <name>Ann</name>
+    <age>14</age>
+  </user>
+  <user >
+    <name>Nataliya</name>
+    <age>41</age>
+  </user>
+  <user >
+    <name>Max</name>
+    <age>19</age>
+  </user>
+  <user >
+    <name>Vlad</name>
+    <age>20</age>
+  </user>
+  <user >
+    <name>Lev</name>
+    <age>37</age>
+  </user>
+  <user >
+    <name>Lucy</name>
+    <age>23</age>
+  </user>
+</users>

@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using FriendsTracker.Models;
-//???
 using Microsoft.EntityFrameworkCore;
+using System.Xml;
+using System;
 // TODO: remove unnecessary usings
 
 namespace FriendsTracker.Controllers
@@ -15,14 +11,23 @@ namespace FriendsTracker.Controllers
     public class HomeController : Controller
     {
         private ApplicationContext db;
+
         public HomeController(ApplicationContext context)
         {
             db = context;
         }
+
         public async Task<IActionResult> Index()
         {
             // TODO Handle pissible error
-            return View(await db.Friends.ToListAsync());
+            try
+            {
+                return View(await db.Friends.ToListAsync());
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         // TODO: remove
@@ -30,6 +35,7 @@ namespace FriendsTracker.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> Create(Friend friend)
         {
@@ -38,30 +44,63 @@ namespace FriendsTracker.Controllers
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
+
+        public async Task<IActionResult> AddFriensFromXML()
+        {
+            XmlDocument xDoc = new XmlDocument();
+            xDoc.Load("C:/Users/Denys/Documents/GitHub/FriendsTracker/FriendsXMLFile.xml");
+            // получим корневой элемент
+            XmlElement xRoot = xDoc.DocumentElement;
+            // обход всех узлов в корневом элементе
+            foreach (XmlNode xnode in xRoot)
+            {
+                int age = 0;
+                string name = "";
+                foreach (XmlNode childnode in xnode.ChildNodes) if (xnode.Name == "user")
+                {
+                        // если узел - name
+                    if (childnode.Name == "name")
+                    {
+                        name = childnode.InnerText;
+                    }
+                        // если узел age
+                    if (childnode.Name == "age")
+                    {
+                        age = Convert.ToInt32(childnode.InnerText);
+                    }
+                }
+                db.Friends.Add(new Friend() { Name = name, Age = age });
+            }
+            await db.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+
         public async Task<IActionResult> Details(int? id)
         {
             if (id != null)
             {
                 // TODO Handle pissible error
                 // TODO use var
-                Friend friend = await db.Friends.FirstOrDefaultAsync(p => p.Id == id);
+                var friend = await db.Friends.FirstOrDefaultAsync(p => p.Id == id);
                 if (friend != null)
                     return View(friend);
             }
             return NotFound();
         }
+
         public async Task<IActionResult> Edit(int? id)
         {
             if (id != null)
             {
                 // TODO Handle pissible error
                 // TODO use var
-                Friend friend = await db.Friends.FirstOrDefaultAsync(p => p.Id == id);
+                var friend = await db.Friends.FirstOrDefaultAsync(p => p.Id == id);
                 if (friend != null)
                     return View(friend);
             }
             return NotFound();
         }
+
         [HttpPost]
         public async Task<IActionResult> Edit(Friend friend)
         {
@@ -70,6 +109,7 @@ namespace FriendsTracker.Controllers
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
+
         [HttpGet]
         [ActionName("Delete")]
         public async Task<IActionResult> ConfirmDelete(int? id)
@@ -78,7 +118,7 @@ namespace FriendsTracker.Controllers
             // TODO use var
             if (id != null)
             {
-                Friend friend = await db.Friends.FirstOrDefaultAsync(p => p.Id == id);
+                var friend = await db.Friends.FirstOrDefaultAsync(p => p.Id == id);
                 if (friend != null)
                     return View(friend);
             }
@@ -93,7 +133,7 @@ namespace FriendsTracker.Controllers
             // TODO use var
             if (id != null)
             {
-                Friend friend = await db.Friends.FirstOrDefaultAsync(p => p.Id == id);
+                var friend = await db.Friends.FirstOrDefaultAsync(p => p.Id == id);
                 if (friend != null)
                 {
                     db.Friends.Remove(friend);
@@ -103,5 +143,6 @@ namespace FriendsTracker.Controllers
             }
             return NotFound();
         }
+
     }
 }

@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Projects\\FriendsTracker\\FriendsTracker.csproj": {}
+    "C:\\Users\\Denys\\Documents\\GitHub\\FriendsTracker\\FriendsTracker.csproj": {}
   },
   "projects": {
-    "C:\\Projects\\FriendsTracker\\FriendsTracker.csproj": {
+    "C:\\Users\\Denys\\Documents\\GitHub\\FriendsTracker\\FriendsTracker.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Projects\\FriendsTracker\\FriendsTracker.csproj",
+        "projectUniqueName": "C:\\Users\\Denys\\Documents\\GitHub\\FriendsTracker\\FriendsTracker.csproj",
         "projectName": "FriendsTracker",
-        "projectPath": "C:\\Projects\\FriendsTracker\\FriendsTracker.csproj",
-        "packagesPath": "C:\\Users\\okovalskyi\\.nuget\\packages\\",
-        "outputPath": "C:\\Projects\\FriendsTracker\\obj\\",
+        "projectPath": "C:\\Users\\Denys\\Documents\\GitHub\\FriendsTracker\\FriendsTracker.csproj",
+        "packagesPath": "C:\\Users\\Denys\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Denys\\Documents\\GitHub\\FriendsTracker\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\okovalskyi\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Denys\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,8 +22,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {},
-          "https://ci.appveyor.com/nuget/system1group": {}
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "netcoreapp3.1": {
@@ -54,12 +53,6 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[3.1.2, 3.1.2]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -68,7 +61,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.300\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.401\\RuntimeIdentifierGraph.json"
         }
       }
     }
