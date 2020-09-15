@@ -238,4 +238,3 @@ C:\Users\Denys\Documents\GitHub\FriendsTracker\obj\Debug\netcoreapp3.1\staticweb
 C:\Users\Denys\Documents\GitHub\FriendsTracker\obj\Debug\netcoreapp3.1\FriendsTracker.dll
 C:\Users\Denys\Documents\GitHub\FriendsTracker\obj\Debug\netcoreapp3.1\FriendsTracker.pdb
 C:\Users\Denys\Documents\GitHub\FriendsTracker\obj\Debug\netcoreapp3.1\FriendsTracker.genruntimeconfig.cache
-C:\Users\Denys\Documents\GitHub\FriendsTracker\obj\Debug\netcoreapp3.1\Razor\Views\Home\AddFriendsFromXML.cshtml.g.cs
