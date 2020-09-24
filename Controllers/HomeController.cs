@@ -4,7 +4,6 @@ using FriendsTracker.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Xml;
 using System;
-// TODO: remove unnecessary usings
 
 namespace FriendsTracker.Controllers
 {
