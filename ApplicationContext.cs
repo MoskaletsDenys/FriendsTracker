@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-// TODO Move file to project root
 namespace FriendsTracker.Models
 {
     public class ApplicationContext:DbContext

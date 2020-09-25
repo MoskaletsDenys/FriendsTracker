@@ -46,30 +46,7 @@ namespace FriendsTracker.Controllers
 
         public async Task<IActionResult> AddFriensFromXML()
         {
-            XmlDocument xDoc = new XmlDocument();
-            xDoc.Load("C:/Users/Denys/Documents/GitHub/FriendsTracker/FriendsXMLFile.xml");
-            // получим корневой элемент
-            XmlElement xRoot = xDoc.DocumentElement;
-            // обход всех узлов в корневом элементе
-            foreach (XmlNode xnode in xRoot)
-            {
-                int age = 0;
-                string name = "";
-                foreach (XmlNode childnode in xnode.ChildNodes) if (xnode.Name == "user")
-                {
-                        // если узел - name
-                    if (childnode.Name == "name")
-                    {
-                        name = childnode.InnerText;
-                    }
-                        // если узел age
-                    if (childnode.Name == "age")
-                    {
-                        age = Convert.ToInt32(childnode.InnerText);
-                    }
-                }
-                db.Friends.Add(new Friend() { Name = name, Age = age });
-            }
+            db.Friends.AddRange(Logic.AddFriendsFromXmlFile.ReadFromXML());
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
@@ -142,6 +119,11 @@ namespace FriendsTracker.Controllers
             }
             return NotFound();
         }
-
+        public async Task<IActionResult> DeleteAllFriends()
+        {
+            db.Friends.RemoveRange(db.Friends);
+            await db.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
     }
 }

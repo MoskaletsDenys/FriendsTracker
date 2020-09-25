@@ -3,7 +3,8 @@
     ViewBag.Title = "Все пользователи";
 }
 <a asp-action="Create">Добавить пользователя<br></a>
-<a asp-action="AddFriensFromXML" >Добавить несколько пользователей</a>
+<a asp-action="AddFriensFromXML">Добавить несколько пользователей<br></a>
+<a asp-action="DeleteAllFriends">Удалить всех пользователей</a>
 <table class="table">
     <tr><td>Имя</td><td>Возраст</td><td>Действия</td></tr>
     @foreach (var item in Model)
