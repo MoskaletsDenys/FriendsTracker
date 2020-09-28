@@ -5,12 +5,12 @@ using System.Collections.Generic;
 
 namespace FriendsTracker.Logic
 {
-    public static class AddFriendsFromXmlFile
+    public class ReadFriendsFromXML
     {
-        public static IEnumerable<Friend> ReadFromXML()
+        public IEnumerable<Friend> ReadFriends()
         {
-            List<Friend> friends = new List<Friend>();
-            XmlDocument xDoc = new XmlDocument();
+            var friends = new List<Friend>();
+            var xDoc = new XmlDocument();
             xDoc.Load("C:/Users/Denys/Documents/GitHub/FriendsTracker/FriendsXMLFile.xml");
             XmlElement xRoot = xDoc.DocumentElement;
             foreach (XmlNode xnode in xRoot)

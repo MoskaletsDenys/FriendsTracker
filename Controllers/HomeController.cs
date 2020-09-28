@@ -1,19 +1,21 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using FriendsTracker.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Xml;
 using System;
+//using FriendsTracker.Logic;
 
 namespace FriendsTracker.Controllers
 {
     public class HomeController : Controller
     {
         private ApplicationContext db;
-
-        public HomeController(ApplicationContext context)
+        private readonly ILogger<HomeController> _logger;
+        public HomeController(ApplicationContext context, ILogger<HomeController> logger)
         {
             db = context;
+            _logger = logger;
         }
 
         public async Task<IActionResult> Index()
@@ -23,8 +25,9 @@ namespace FriendsTracker.Controllers
             {
                 return View(await db.Friends.ToListAsync());
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex.Message);
                 throw;
             }
         }
@@ -39,51 +42,92 @@ namespace FriendsTracker.Controllers
         public async Task<IActionResult> Create(Friend friend)
         {
             // TODO Handle pissible error
-            db.Friends.Add(friend);
-            await db.SaveChangesAsync();
-            return RedirectToAction("Index");
+            try
+            {
+                db.Friends.Add(friend);
+                await db.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                throw;
+            }
         }
 
         public async Task<IActionResult> AddFriensFromXML()
         {
-            db.Friends.AddRange(Logic.AddFriendsFromXmlFile.ReadFromXML());
-            await db.SaveChangesAsync();
-            return RedirectToAction("Index");
+            //Write Logic.* or using Logic?
+            try
+            {
+                var readFromXml = new Logic.ReadFriendsFromXML();
+                db.Friends.AddRange(readFromXml.ReadFriends());
+                await db.SaveChangesAsync();
+                _logger.LogInformation("Added list of friends from XML");
+                return RedirectToAction("Index");
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                throw;
+            }
         }
 
         public async Task<IActionResult> Details(int? id)
         {
-            if (id != null)
+            try
             {
-                // TODO Handle pissible error
-                // TODO use var
-                var friend = await db.Friends.FirstOrDefaultAsync(p => p.Id == id);
-                if (friend != null)
-                    return View(friend);
+                if (id != null)
+                {
+                    // TODO Handle pissible error
+                    var friend = await db.Friends.FirstOrDefaultAsync(p => p.Id == id);
+                    if (friend != null)
+                        return View(friend);
+                }
+                return NotFound();
             }
-            return NotFound();
+            catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                throw;
+            }
         }
 
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id != null)
+            try
             {
-                // TODO Handle pissible error
-                // TODO use var
-                var friend = await db.Friends.FirstOrDefaultAsync(p => p.Id == id);
-                if (friend != null)
-                    return View(friend);
+                if (id != null)
+                {
+                    // TODO Handle pissible error
+                    var friend = await db.Friends.FirstOrDefaultAsync(p => p.Id == id);
+                    if (friend != null)
+                        return View(friend);
+                }
+                return NotFound();
             }
-            return NotFound();
+            catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                throw;
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> Edit(Friend friend)
         {
             // TODO Handle pissible error
-            db.Friends.Update(friend);
-            await db.SaveChangesAsync();
-            return RedirectToAction("Index");
+            try
+            {
+                db.Friends.Update(friend);
+                await db.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                throw;
+            }
         }
 
         [HttpGet]
@@ -91,14 +135,22 @@ namespace FriendsTracker.Controllers
         public async Task<IActionResult> ConfirmDelete(int? id)
         {
             // TODO Handle pissible error
-            // TODO use var
-            if (id != null)
+            try
             {
-                var friend = await db.Friends.FirstOrDefaultAsync(p => p.Id == id);
-                if (friend != null)
-                    return View(friend);
+                if (id != null)
+                {
+                    var friend = await db.Friends.FirstOrDefaultAsync(p => p.Id == id);
+                    if (friend != null)
+                        return View(friend);
+                }
+                return NotFound();
             }
-            return NotFound();
+            catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                throw;
+            }
+
         }
 
         // TODO change to HTTP DELETE
@@ -106,24 +158,43 @@ namespace FriendsTracker.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             // TODO Handle pissible error
-            // TODO use var
-            if (id != null)
+            try
             {
-                var friend = await db.Friends.FirstOrDefaultAsync(p => p.Id == id);
-                if (friend != null)
+                if (id != null)
                 {
-                    db.Friends.Remove(friend);
-                    await db.SaveChangesAsync();
-                    return RedirectToAction("Index");
+                    var friend = await db.Friends.FirstOrDefaultAsync(p => p.Id == id);
+                    if (friend != null)
+                    {
+                        db.Friends.Remove(friend);
+                        await db.SaveChangesAsync();
+                        _logger.LogInformation("One friend deleted");
+                        return RedirectToAction("Index");
+                    }
                 }
+                return NotFound();
             }
-            return NotFound();
+            catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                throw;
+            }
+
         }
         public async Task<IActionResult> DeleteAllFriends()
         {
-            db.Friends.RemoveRange(db.Friends);
-            await db.SaveChangesAsync();
-            return RedirectToAction("Index");
+            try
+            {
+                //Good way to delete?
+                db.Friends.RemoveRange(db.Friends);
+                await db.SaveChangesAsync();
+                _logger.LogInformation("All friends deleted");
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                throw;
+            }
         }
     }
 }

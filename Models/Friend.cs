@@ -1,6 +1,4 @@
-﻿// TODO: remove unnecessary usings
-
-namespace FriendsTracker.Models
+﻿namespace FriendsTracker.Models
 {
     public class Friend
     {
