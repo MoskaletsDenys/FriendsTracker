@@ -5,12 +5,15 @@ using System.Collections.Generic;
 
 namespace FriendsTracker.Logic
 {
+    //TODO Rename don't use verbs for classes
     public class ReadFriendsFromXML
     {
+        //TODO Change to List
         public IEnumerable<Friend> ReadFriends()
         {
             var friends = new List<Friend>();
             var xDoc = new XmlDocument();
+            // TODO create constants for magic values
             xDoc.Load("C:/Users/Denys/Documents/GitHub/FriendsTracker/FriendsXMLFile.xml");
             XmlElement xRoot = xDoc.DocumentElement;
             foreach (XmlNode xnode in xRoot)

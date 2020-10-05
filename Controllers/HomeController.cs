@@ -8,10 +8,16 @@ using System;
 
 namespace FriendsTracker.Controllers
 {
+    //TODO SEPARATE Vies controller and API
+    //Rename Home controller
     public class HomeController : Controller
     {
+        //TODO make readonly
+        //TODO use 1 naming convension
+        //TODO raname context and rename variable 
         private ApplicationContext db;
         private readonly ILogger<HomeController> _logger;
+
         public HomeController(ApplicationContext context, ILogger<HomeController> logger)
         {
             db = context;
@@ -20,7 +26,6 @@ namespace FriendsTracker.Controllers
 
         public async Task<IActionResult> Index()
         {
-            // TODO Handle pissible error
             try
             {
                 return View(await db.Friends.ToListAsync());
@@ -32,7 +37,6 @@ namespace FriendsTracker.Controllers
             }
         }
 
-        // TODO: remove
         public IActionResult Create()
         {
             return View();
@@ -41,7 +45,6 @@ namespace FriendsTracker.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(Friend friend)
         {
-            // TODO Handle pissible error
             try
             {
                 db.Friends.Add(friend);
@@ -63,6 +66,7 @@ namespace FriendsTracker.Controllers
                 var readFromXml = new Logic.ReadFriendsFromXML();
                 db.Friends.AddRange(readFromXml.ReadFriends());
                 await db.SaveChangesAsync();
+                //TODO ADD list count  to log
                 _logger.LogInformation("Added list of friends from XML");
                 return RedirectToAction("Index");
             }
@@ -79,7 +83,6 @@ namespace FriendsTracker.Controllers
             {
                 if (id != null)
                 {
-                    // TODO Handle pissible error
                     var friend = await db.Friends.FirstOrDefaultAsync(p => p.Id == id);
                     if (friend != null)
                         return View(friend);
@@ -99,7 +102,6 @@ namespace FriendsTracker.Controllers
             {
                 if (id != null)
                 {
-                    // TODO Handle pissible error
                     var friend = await db.Friends.FirstOrDefaultAsync(p => p.Id == id);
                     if (friend != null)
                         return View(friend);
@@ -116,7 +118,6 @@ namespace FriendsTracker.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(Friend friend)
         {
-            // TODO Handle pissible error
             try
             {
                 db.Friends.Update(friend);
@@ -134,7 +135,6 @@ namespace FriendsTracker.Controllers
         [ActionName("Delete")]
         public async Task<IActionResult> ConfirmDelete(int? id)
         {
-            // TODO Handle pissible error
             try
             {
                 if (id != null)
@@ -157,7 +157,6 @@ namespace FriendsTracker.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(int? id)
         {
-            // TODO Handle pissible error
             try
             {
                 if (id != null)
@@ -187,6 +186,7 @@ namespace FriendsTracker.Controllers
                 //Good way to delete?
                 db.Friends.RemoveRange(db.Friends);
                 await db.SaveChangesAsync();
+                //TODO add Count "1 user(s) deleted"
                 _logger.LogInformation("All friends deleted");
                 return RedirectToAction("Index");
             }
