@@ -22,7 +22,7 @@ namespace FriendsTracker
         public void ConfigureServices(IServiceCollection services)
         {
             string connection = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<ApplicationContext>(options =>
+            services.AddDbContext<FriendsContext>(options =>
                options.UseSqlServer(connection));
             services.AddControllersWithViews();
         }
@@ -48,7 +48,7 @@ namespace FriendsTracker
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=View}/{action=Index}/{id?}");
             });
             logger.LogInformation("FriendsTracker project Startup class Configure method");
         }

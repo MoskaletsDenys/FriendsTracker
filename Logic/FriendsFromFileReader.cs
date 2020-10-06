@@ -5,28 +5,31 @@ using System.Collections.Generic;
 
 namespace FriendsTracker.Logic
 {
-    //TODO Rename don't use verbs for classes
-    public class ReadFriendsFromXML
+    public class FriendsFromFileReader
     {
-        //TODO Change to List
-        public IEnumerable<Friend> ReadFriends()
+        const string xmlFilePath = "C:/Users/Denys/Desktop/FriendsTracker/FriendsXMLFile.xml";
+        const int defaultAge = 0;
+        const string defaultName = "";
+        const string userTag = "user";
+        const string nameTag = "name";
+        const string ageTag = "age";
+        public List<Friend> ReadXML()
         {
             var friends = new List<Friend>();
             var xDoc = new XmlDocument();
-            // TODO create constants for magic values
-            xDoc.Load("C:/Users/Denys/Documents/GitHub/FriendsTracker/FriendsXMLFile.xml");
+            xDoc.Load(xmlFilePath);
             XmlElement xRoot = xDoc.DocumentElement;
             foreach (XmlNode xnode in xRoot)
             {
-                int age = 0;
-                var name = "";
-                foreach (XmlNode childnode in xnode.ChildNodes) if (xnode.Name == "user")
+                var name = defaultName;
+                int age = defaultAge;
+                foreach (XmlNode childnode in xnode.ChildNodes) if (xnode.Name == userTag)
                 {
-                    if (childnode.Name == "name")
+                    if (childnode.Name == nameTag)
                     {
                         name = childnode.InnerText;
                     }
-                    if (childnode.Name == "age")
+                    if (childnode.Name == ageTag)
                     {
                         age = Convert.ToInt32(childnode.InnerText);
                     }

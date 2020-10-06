@@ -4,23 +4,19 @@ using Microsoft.Extensions.Logging;
 using FriendsTracker.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
-//using FriendsTracker.Logic;
+using FriendsTracker.Logic;
+using System.Linq;
 
 namespace FriendsTracker.Controllers
 {
     //TODO SEPARATE Vies controller and API
-    //Rename Home controller
-    public class HomeController : Controller
+    public class ViewController : Controller
     {
-        //TODO make readonly
-        //TODO use 1 naming convension
-        //TODO raname context and rename variable 
-        private ApplicationContext db;
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ApplicationContext context, ILogger<HomeController> logger)
+        private readonly FriendsContext _friendsContext;
+        private readonly ILogger<ViewController> _logger;
+        public ViewController(FriendsContext context, ILogger<ViewController> logger)
         {
-            db = context;
+            _friendsContext = context;
             _logger = logger;
         }
 
@@ -28,7 +24,7 @@ namespace FriendsTracker.Controllers
         {
             try
             {
-                return View(await db.Friends.ToListAsync());
+                return View(await _friendsContext.Friends.ToListAsync());
             }
             catch (Exception ex)
             {
@@ -47,8 +43,8 @@ namespace FriendsTracker.Controllers
         {
             try
             {
-                db.Friends.Add(friend);
-                await db.SaveChangesAsync();
+                _friendsContext.Friends.Add(friend);
+                await _friendsContext.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             catch(Exception ex)
@@ -60,14 +56,13 @@ namespace FriendsTracker.Controllers
 
         public async Task<IActionResult> AddFriensFromXML()
         {
-            //Write Logic.* or using Logic?
             try
             {
-                var readFromXml = new Logic.ReadFriendsFromXML();
-                db.Friends.AddRange(readFromXml.ReadFriends());
-                await db.SaveChangesAsync();
-                //TODO ADD list count  to log
-                _logger.LogInformation("Added list of friends from XML");
+                var friendsReader = new FriendsFromFileReader();
+                var friendsList= friendsReader.ReadXML();
+                _friendsContext.Friends.AddRange(friendsList);
+                await _friendsContext.SaveChangesAsync();
+                _logger.LogInformation($"Added list of {friendsList.Count} friend(s) from XML");
                 return RedirectToAction("Index");
             }
             catch(Exception ex)
@@ -83,7 +78,7 @@ namespace FriendsTracker.Controllers
             {
                 if (id != null)
                 {
-                    var friend = await db.Friends.FirstOrDefaultAsync(p => p.Id == id);
+                    var friend = await _friendsContext.Friends.FirstOrDefaultAsync(p => p.Id == id);
                     if (friend != null)
                         return View(friend);
                 }
@@ -102,7 +97,7 @@ namespace FriendsTracker.Controllers
             {
                 if (id != null)
                 {
-                    var friend = await db.Friends.FirstOrDefaultAsync(p => p.Id == id);
+                    var friend = await _friendsContext.Friends.FirstOrDefaultAsync(p => p.Id == id);
                     if (friend != null)
                         return View(friend);
                 }
@@ -120,8 +115,8 @@ namespace FriendsTracker.Controllers
         {
             try
             {
-                db.Friends.Update(friend);
-                await db.SaveChangesAsync();
+                _friendsContext.Friends.Update(friend);
+                await _friendsContext.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             catch(Exception ex)
@@ -139,7 +134,7 @@ namespace FriendsTracker.Controllers
             {
                 if (id != null)
                 {
-                    var friend = await db.Friends.FirstOrDefaultAsync(p => p.Id == id);
+                    var friend = await _friendsContext.Friends.FirstOrDefaultAsync(p => p.Id == id);
                     if (friend != null)
                         return View(friend);
                 }
@@ -161,11 +156,11 @@ namespace FriendsTracker.Controllers
             {
                 if (id != null)
                 {
-                    var friend = await db.Friends.FirstOrDefaultAsync(p => p.Id == id);
+                    var friend = await _friendsContext.Friends.FirstOrDefaultAsync(p => p.Id == id);
                     if (friend != null)
                     {
-                        db.Friends.Remove(friend);
-                        await db.SaveChangesAsync();
+                        _friendsContext.Friends.Remove(friend);
+                        await _friendsContext.SaveChangesAsync();
                         _logger.LogInformation("One friend deleted");
                         return RedirectToAction("Index");
                     }
@@ -183,11 +178,10 @@ namespace FriendsTracker.Controllers
         {
             try
             {
-                //Good way to delete?
-                db.Friends.RemoveRange(db.Friends);
-                await db.SaveChangesAsync();
-                //TODO add Count "1 user(s) deleted"
-                _logger.LogInformation("All friends deleted");
+                int usersCount = _friendsContext.Friends.Count();
+                _friendsContext.Friends.RemoveRange(_friendsContext.Friends);
+                await _friendsContext.SaveChangesAsync();
+                _logger.LogInformation($"Deleted all {usersCount} friend(s)");
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
