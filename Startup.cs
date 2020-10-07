@@ -50,7 +50,7 @@ namespace FriendsTracker
                     name: "default",
                     pattern: "{controller=View}/{action=Index}/{id?}");
             });
-            logger.LogInformation("FriendsTracker project Startup class Configure method");
+            
         }
     }
 }

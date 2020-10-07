@@ -12,19 +12,19 @@ namespace FriendsTracker.Controllers
     //TODO SEPARATE Vies controller and API
     public class ViewController : Controller
     {
-        private readonly FriendsContext _friendsContext;
         private readonly ILogger<ViewController> _logger;
+        private DbOperations _dbOperations;
         public ViewController(FriendsContext context, ILogger<ViewController> logger)
         {
-            _friendsContext = context;
+            _dbOperations=new DbOperations(context);
             _logger = logger;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             try
             {
-                return View(await _friendsContext.Friends.ToListAsync());
+                return View(_dbOperations.GetFriends().Result);
             }
             catch (Exception ex)
             {
@@ -39,12 +39,11 @@ namespace FriendsTracker.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Friend friend)
+        public IActionResult Create(Friend friend)
         {
             try
             {
-                _friendsContext.Friends.Add(friend);
-                await _friendsContext.SaveChangesAsync();
+                _dbOperations.AddFriend(friend);
                 return RedirectToAction("Index");
             }
             catch(Exception ex)
@@ -54,14 +53,13 @@ namespace FriendsTracker.Controllers
             }
         }
 
-        public async Task<IActionResult> AddFriensFromXML()
+        public IActionResult AddFriensFromXML()
         {
             try
             {
                 var friendsReader = new FriendsFromFileReader();
                 var friendsList= friendsReader.ReadXML();
-                _friendsContext.Friends.AddRange(friendsList);
-                await _friendsContext.SaveChangesAsync();
+                _dbOperations.AddListOfFriends(friendsList);
                 _logger.LogInformation($"Added list of {friendsList.Count} friend(s) from XML");
                 return RedirectToAction("Index");
             }
@@ -72,13 +70,13 @@ namespace FriendsTracker.Controllers
             }
         }
 
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             try
             {
                 if (id != null)
                 {
-                    var friend = await _friendsContext.Friends.FirstOrDefaultAsync(p => p.Id == id);
+                    var friend = _dbOperations.GetFriendById(id);
                     if (friend != null)
                         return View(friend);
                 }
@@ -91,13 +89,13 @@ namespace FriendsTracker.Controllers
             }
         }
 
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
             try
             {
                 if (id != null)
                 {
-                    var friend = await _friendsContext.Friends.FirstOrDefaultAsync(p => p.Id == id);
+                    var friend = _dbOperations.GetFriendById(id);
                     if (friend != null)
                         return View(friend);
                 }
@@ -111,12 +109,11 @@ namespace FriendsTracker.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(Friend friend)
+        public IActionResult Edit(Friend friend)
         {
             try
             {
-                _friendsContext.Friends.Update(friend);
-                await _friendsContext.SaveChangesAsync();
+                _dbOperations.UpdateFriend(friend);
                 return RedirectToAction("Index");
             }
             catch(Exception ex)
@@ -128,13 +125,13 @@ namespace FriendsTracker.Controllers
 
         [HttpGet]
         [ActionName("Delete")]
-        public async Task<IActionResult> ConfirmDelete(int? id)
+        public IActionResult ConfirmDelete(int? id)
         {
             try
             {
                 if (id != null)
                 {
-                    var friend = await _friendsContext.Friends.FirstOrDefaultAsync(p => p.Id == id);
+                    var friend = _dbOperations.GetFriendById(id);
                     if (friend != null)
                         return View(friend);
                 }
@@ -150,17 +147,16 @@ namespace FriendsTracker.Controllers
 
         // TODO change to HTTP DELETE
         [HttpPost]
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
             try
             {
                 if (id != null)
                 {
-                    var friend = await _friendsContext.Friends.FirstOrDefaultAsync(p => p.Id == id);
+                    var friend = _dbOperations.GetFriendById(id).Result;
                     if (friend != null)
                     {
-                        _friendsContext.Friends.Remove(friend);
-                        await _friendsContext.SaveChangesAsync();
+                        _dbOperations.DeleteFriend(friend);
                         _logger.LogInformation("One friend deleted");
                         return RedirectToAction("Index");
                     }
@@ -174,13 +170,14 @@ namespace FriendsTracker.Controllers
             }
 
         }
-        public async Task<IActionResult> DeleteAllFriends()
+        public IActionResult DeleteAllFriends()
         {
             try
             {
-                int usersCount = _friendsContext.Friends.Count();
-                _friendsContext.Friends.RemoveRange(_friendsContext.Friends);
-                await _friendsContext.SaveChangesAsync();
+                int usersCount = _dbOperations.GetFriendsCount();
+                //_friendsContext.Friends.RemoveRange(_friendsContext.Friends);
+                //await _friendsContext.SaveChangesAsync();
+                _dbOperations.DeleteAllFriends();
                 _logger.LogInformation($"Deleted all {usersCount} friend(s)");
                 return RedirectToAction("Index");
             }
