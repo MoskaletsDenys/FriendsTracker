@@ -13,18 +13,18 @@ namespace FriendsTracker.Controllers
     public class ViewController : Controller
     {
         private readonly ILogger<ViewController> _logger;
-        private DbOperations _dbOperations;
+        private readonly DbOperations _dbOperations;
         public ViewController(FriendsContext context, ILogger<ViewController> logger)
         {
             _dbOperations=new DbOperations(context);
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             try
             {
-                return View(_dbOperations.GetFriends().Result);
+                return View(await _dbOperations.GetAllFriends());
             }
             catch (Exception ex)
             {
@@ -39,11 +39,11 @@ namespace FriendsTracker.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Friend friend)
+        public async Task<IActionResult> Create(Friend friend)
         {
             try
             {
-                _dbOperations.AddFriend(friend);
+                await _dbOperations.AddFriend(friend);
                 return RedirectToAction("Index");
             }
             catch(Exception ex)
@@ -53,13 +53,13 @@ namespace FriendsTracker.Controllers
             }
         }
 
-        public IActionResult AddFriensFromXML()
+        public async Task<IActionResult> AddFriensFromXML()
         {
             try
             {
                 var friendsReader = new FriendsFromFileReader();
                 var friendsList= friendsReader.ReadXML();
-                _dbOperations.AddListOfFriends(friendsList);
+                await _dbOperations.AddListOfFriends(friendsList);
                 _logger.LogInformation($"Added list of {friendsList.Count} friend(s) from XML");
                 return RedirectToAction("Index");
             }
@@ -70,13 +70,13 @@ namespace FriendsTracker.Controllers
             }
         }
 
-        public IActionResult Details(int? id)
+        public async Task<IActionResult> Details(int? id)
         {
             try
             {
                 if (id != null)
                 {
-                    var friend = _dbOperations.GetFriendById(id);
+                    var friend = await _dbOperations.GetFriendById(id);
                     if (friend != null)
                         return View(friend);
                 }
@@ -89,13 +89,13 @@ namespace FriendsTracker.Controllers
             }
         }
 
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             try
             {
                 if (id != null)
                 {
-                    var friend = _dbOperations.GetFriendById(id);
+                    var friend = await _dbOperations.GetFriendById(id);
                     if (friend != null)
                         return View(friend);
                 }
@@ -109,11 +109,11 @@ namespace FriendsTracker.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(Friend friend)
+        public async Task<IActionResult> Edit(Friend friend)
         {
             try
             {
-                _dbOperations.UpdateFriend(friend);
+                await _dbOperations.UpdateFriend(friend);
                 return RedirectToAction("Index");
             }
             catch(Exception ex)
@@ -125,13 +125,13 @@ namespace FriendsTracker.Controllers
 
         [HttpGet]
         [ActionName("Delete")]
-        public IActionResult ConfirmDelete(int? id)
+        public async Task<IActionResult> ConfirmDelete(int? id)
         {
             try
             {
                 if (id != null)
                 {
-                    var friend = _dbOperations.GetFriendById(id);
+                    var friend = await _dbOperations.GetFriendById(id);
                     if (friend != null)
                         return View(friend);
                 }
@@ -147,16 +147,16 @@ namespace FriendsTracker.Controllers
 
         // TODO change to HTTP DELETE
         [HttpPost]
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             try
             {
                 if (id != null)
                 {
-                    var friend = _dbOperations.GetFriendById(id).Result;
+                    var friend = await _dbOperations.GetFriendById(id);
                     if (friend != null)
                     {
-                        _dbOperations.DeleteFriend(friend);
+                        await _dbOperations.DeleteFriend(friend);
                         _logger.LogInformation("One friend deleted");
                         return RedirectToAction("Index");
                     }
@@ -170,14 +170,12 @@ namespace FriendsTracker.Controllers
             }
 
         }
-        public IActionResult DeleteAllFriends()
+        public async Task<IActionResult> DeleteAllFriends()
         {
             try
             {
                 int usersCount = _dbOperations.GetFriendsCount();
-                //_friendsContext.Friends.RemoveRange(_friendsContext.Friends);
-                //await _friendsContext.SaveChangesAsync();
-                _dbOperations.DeleteAllFriends();
+                await _dbOperations.DeleteAllFriends();
                 _logger.LogInformation($"Deleted all {usersCount} friend(s)");
                 return RedirectToAction("Index");
             }
