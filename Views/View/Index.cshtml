@@ -2,20 +2,20 @@
 @{
     ViewBag.Title = "Все пользователи";
 }
-<a asp-action="Create">Добавить пользователя<br></a>
-<a asp-action="AddFriensFromXML">Добавить несколько пользователей<br></a>
-<a asp-action="DeleteAllFriends">Удалить всех пользователей</a>
+<a asp-action="Create">Add friend<br></a>
+<a asp-action="AddFriensFromXML">Add multiple friends<br></a>
+<a asp-action="DeleteAllFriends">Delete all friends</a>
 <table class="table">
-    <tr><td>Имя</td><td>Возраст</td><td>Действия</td></tr>
+    <tr><td>Name</td><td>Age</td><td>Actions</td></tr>
     @foreach (var item in Model)
     {
 <tr>
     <td>@item.Name</td>
     <td>@item.Age</td>
     <td>
-        <a asp-action="Details" asp-controller="View" asp-route-id="@item.Id">Подробнее</a> |
-        <a asp-action="Edit" asp-controller="View" asp-route-id="@item.Id">Изменить</a> |
-        <a asp-action="Delete" asp-controller="View" asp-route-id="@item.Id">Удалить</a>
+        <a asp-action="Details" asp-controller="View" asp-route-id="@item.Id">Details</a> |
+        <a asp-action="Edit" asp-controller="View" asp-route-id="@item.Id">Edit</a> |
+        <a asp-action="Delete" asp-controller="View" asp-route-id="@item.Id">Delete</a>
     </td>
 </tr>
     }

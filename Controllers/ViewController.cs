@@ -2,21 +2,18 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using FriendsTracker.Models;
-using Microsoft.EntityFrameworkCore;
 using System;
 using FriendsTracker.Logic;
-using System.Linq;
 
 namespace FriendsTracker.Controllers
 {
-    //TODO SEPARATE Vies controller and API
     public class ViewController : Controller
     {
         private readonly ILogger<ViewController> _logger;
-        private readonly DbOperations _dbOperations;
+        private readonly FriendsRepository _dbOperations;
         public ViewController(FriendsContext context, ILogger<ViewController> logger)
         {
-            _dbOperations=new DbOperations(context);
+            _dbOperations=new FriendsRepository(context);
             _logger = logger;
         }
 
@@ -145,7 +142,6 @@ namespace FriendsTracker.Controllers
 
         }
 
-        // TODO change to HTTP DELETE
         [HttpPost]
         public async Task<IActionResult> Delete(int? id)
         {

@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace FriendsTracker.Logic
 {
-    public class DbOperations
+    public class FriendsRepository
     {
         private readonly FriendsContext _friendsContext;
 
-        public DbOperations(FriendsContext context)
+        public FriendsRepository(FriendsContext context)
         {
             _friendsContext = context;
         }
