@@ -61,7 +61,7 @@ namespace FriendsTracker.Controllers
                 return RedirectToAction("Index");
             }
             catch(Exception ex)
-            {
+            { 
                 _logger.LogError(ex.Message);
                 throw;
             }
